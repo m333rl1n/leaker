@@ -87,3 +87,4 @@ if __name__ == "__main__":
         link = sys.stdin.readline().strip()
         while link:
             find_backup(link)
+            link = sys.stdin.readline()
