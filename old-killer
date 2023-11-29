@@ -1,0 +1,89 @@
+#! /usr/bin/env python3
+import sys
+from urllib3.util import parse_url
+
+# list of suffixes
+SUFFIX = [
+    "7z",
+    "backup",
+    "bak",
+    "bck",
+    "bz2",
+    "copy",
+    "gz",
+    "old",
+    "oring",
+    "rar",
+    "tar",
+    "tar.bz2",
+    "tar.gz",
+    "tar.lz",
+    "tar.lzma",
+    "lzma",
+    "sav",
+    "save",
+    "tgz",
+    "tmp",
+    "zip",
+]
+
+FILE_SUFFIX = ["bak", "old", "bk", "bck", "1", "2", "3", "4", "5"]
+
+
+def find_backup(url):
+    # parse url
+    u = parse_url(url.strip())
+
+    # check if a file is in url
+    file = (u.path or "").rstrip("/").split("/")[-1]
+    
+    # define schema
+    s = u.scheme + "://" if u.scheme else ""
+    
+    # for backup file of in document root
+    if u.path in [None, "/"]:
+        
+        # remove www from domain
+        l = u.hostname.replace("www.", "").split(".")
+        
+        sitename = l[-2]
+        tld = l[-1]
+        perm = [sitename, f"{sitename}.{tld}"]
+        
+        if len(l) > 2:
+            perm.append(l[0])
+
+        for p in perm:
+            for sf in SUFFIX:
+                print(f"{s}{u.hostname}/{p}.{sf}", flush=True)
+
+    # for old versoin of file
+    elif "." in file:
+        print(f"{s}{u.hostname}{u.path}~", flush=True) # example:  /wp-config.php~
+        print(
+            f"{s}"
+            + f'{u.hostname}/{u.path.rstrip("/").rstrip(file)}.{file}.swp'.replace(
+                "//", "/"
+            ),
+            flush=True,
+        ) # example: /.index.php.swp
+        
+        for sf in FILE_SUFFIX:
+            print(f"{s}{u.hostname}{u.path}.{sf}", flush=True)
+
+
+if __name__ == "__main__":
+    # read a single url
+    if sys.stdin.isatty():
+        if len(sys.argv) < 2:
+            print(f"USAGE: {sys.argv[0]} [URL]")
+            exit(1)
+
+        link = sys.argv[1]
+        find_backup(link)
+    
+    # read data from STDIN
+    else:
+        link = sys.stdin.readline().strip()
+        while link:
+            find_backup(link)
