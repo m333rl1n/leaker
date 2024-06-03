@@ -72,19 +72,8 @@ def find_backup(url):
             print(f"{s}{u.hostname}{u.path}.{sf}", flush=True)
 
 
-if __name__ == "__main__":
-    # read a single url
-    if sys.stdin.isatty():
-        if len(sys.argv) < 2:
-            print(f"USAGE: {sys.argv[0]} [URL]")
-            exit(1)
 
-        link = sys.argv[1]
-        find_backup(link)
-    
-    # read data from STDIN
-    else:
-        link = sys.stdin.readline().strip()
-        while link:
-            find_backup(link)
-            link = sys.stdin.readline()
+link = sys.stdin.readline().strip()
+while link:
+    find_backup(link)
+    link = sys.stdin.readline()
