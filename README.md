@@ -1,15 +1,15 @@
-# Old-Killer
+# Leaker
 A tool for finding old version of files and backups.
 
 ### Usage:
 1. clone repo:
 ```bash
-git clone https://github.com/m333rl1n/old-killer.git
-cd old-killer
+git clone https://github.com/m333rl1n/leaker.git
+cd leaker
 ```
 2. give it a single URL:
 ```bash
-./old-killer https://domain.tld/config.php
+./leaker https://domain.tld/config.php
 
 # result:
 https://domain.tld/index.php~
@@ -26,7 +26,7 @@ https://domain.tld/index.php.5
 ```
 2. Or pipe a list of URLs:
 ```bash
-cat urls.txt | ./old-killer
+cat urls.txt | ./leaker
 
 # result:
 https://domain.tld/index.php~
